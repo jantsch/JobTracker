@@ -11,6 +11,7 @@ import { connect} from 'react-redux'
 import { checkLoginUser} from './actions'
 import {LoadingScreen} from './components/common'
 import SplashScreen from 'react-native-splash-screen'
+import registerNotifications from './services/PushNotifications'
 // Simple component to render something in place of icon
 const TabView = ({ selected, title }) => {
   
@@ -52,6 +53,7 @@ class RouterComponent extends Component{
 
 	componentWillMount(){
 		this.props.checkLoginUser()
+		registerNotifications()
 	}
 
 	render(){	
