@@ -10,8 +10,9 @@ import {
 		DeafultUpperImage
 		} from './common'
 import { connect} from 'react-redux'
-import { onInputChange, loginUser , checkLoginUser} from './../actions'
+import { onInputChange, loginUser} from './../actions'
 import {Actions} from 'react-native-router-flux'
+
 
 
 class LoginAuth extends Component{
@@ -22,7 +23,7 @@ class LoginAuth extends Component{
 
 	onButtonPress(){
 		const {email,password} = this.props		
-		this.props.loginUser({email,password})
+		this.props.loginUser({email,password})			
 	}
 
 	renderButton(){	
@@ -83,4 +84,4 @@ const mapStateToProps = (state) =>{
 	return { email, password, error, loading }
 }
 
-export default connect(mapStateToProps,{onInputChange,loginUser,checkLoginUser})(LoginAuth)
+export default connect(mapStateToProps,{onInputChange,loginUser})(LoginAuth)

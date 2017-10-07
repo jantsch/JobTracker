@@ -22,7 +22,7 @@ const TutorialScreen = ({styles,color,mainText,subtitle,img,button}) =>{
       if(button)
        return (  
         <View style={styles.buttonStyle}>
-          <Button  raised title='Continue'  onPress={()=> Actions.authPage()} />
+          <Button  raised title='Continue'  onPress={()=> Actions.socialLogin()} />
         </View>    
       )  
     }

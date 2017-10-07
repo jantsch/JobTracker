@@ -12,6 +12,7 @@ import {AsyncStorage} from 'react-native'
 import axios from 'axios'
 import {Actions} from 'react-native-router-flux'
 import Secrets from 'react-native-config'
+import SocialLoginAPI from './../services/OAuth'
 
 
 
@@ -42,7 +43,7 @@ export const checkLoginUser = () =>{
 export const loginUser = ({email,password})=>{
 
 	return (dispatch) =>{
-		console.log(Secrets.SERVER_URL)
+		
 		if( !email  || !password)
 			dispatch({type: LOGIN_USER_FAIL, payload: { error : 'Fill the fields'}})
 		else
@@ -91,35 +92,29 @@ const registerUser = (dispatch,email,password)=>{
 }
 
 
-	
 
-
-
-
-/*
-export const  Login = () => async dispatch =>{
-		let token = await AsyncStorage.getItem('active_token')
-		if(token){
-			//Dispatch an action FB is done
-			dispatch({type: LOGIN_SUCCESS, payload: token})
-		}else{
-			// Start up Login Process
-			doFacebookLogin(dispatch)
-		}
-	}
-
-
-const doFacebookLogin = async dispatch=>{
-	let {token,type} = await Facebook.logInWithReadPermissionsAsync('315921242213376',{
-		permissions: ['public_profile']
-	})
-	if(type==='cancel'){
-			return dispatch({type: FB_LOGIN_FAIL})
-	}
-
-	await AsyncStorage.setItem('active_token', token)
-
-	dispatch({type: FB_LOGIN_SUCCESS,payload: token})
-	
+export const loginWithProvider = (provider) => async dispatch =>{
+		
+		SocialLoginAPI(provider)
+		.then(info=>{console.log(info)})
+		.catch(error=>{console.log(error)})
 }
-*/
+
+const registerUserWithProvider = (dispatch,token,username)=>{
+
+		dispatch({type: LOGIN_USER})
+		
+		axios.post(Secrets.SERVER_URL +'/api/auth/registerWithProvider', {
+		   		token, username
+		})
+		.then((response)=> {	
+				  
+			   let active_token = response.data.token
+			   loginSuccess(dispatch,active_token)
+		})
+		.catch((error)=> {
+		  		// Register Fail 		  		
+		  		dispatch({type: LOGIN_USER_FAIL, payload: {error: 'Error to Login/Register'}})
+		    	console.log(error);
+		  	});		
+}

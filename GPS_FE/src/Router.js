@@ -7,6 +7,7 @@ import MyJobs from './components/MyJobs'
 import Jobs from './components/Jobs'
 import Settings from './components/Settings'
 import TutorialScreens from './components/TutorialScreens'
+import SocialLogin from './components/SocialLogin'
 import { connect} from 'react-redux'
 import { checkLoginUser} from './actions'
 import {LoadingScreen} from './components/common'
@@ -74,9 +75,14 @@ class RouterComponent extends Component{
 								initial={!this.props.token}								
 							/>	
 							<Scene 
-								key="authPage"
-								component={LoginAuth}								
+								key="socialLogin"
+								component={SocialLogin}								
 								hideNavBar={true}							
+							/>			
+							<Scene 
+								key="authPage"
+								hideNavBar={false}
+								component={LoginAuth}							
 							/>					
 						</Scene>
 						<Scene key="TabBar" tabs={true} hideNavBar tabBarStyle={tabBarStyle} initial={this.props.token}	>
