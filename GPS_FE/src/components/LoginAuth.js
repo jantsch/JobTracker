@@ -17,10 +17,6 @@ import {Actions} from 'react-native-router-flux'
 
 class LoginAuth extends Component{
 
-	
-	
-	
-
 	onButtonPress(){
 		const {email,password} = this.props		
 		this.props.loginUser({email,password})			

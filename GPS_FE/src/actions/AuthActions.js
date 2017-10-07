@@ -50,7 +50,7 @@ export const loginUser = ({email,password})=>{
 		{			
 			dispatch({type: LOGIN_USER,	payload: {email,password}})			
 			axios.post(Secrets.SERVER_URL +'/api/auth/login', {
-		   		username: email, password: password
+		   		email: email, password: password
 		 	},{
 			  timeout: 500
 			})
@@ -69,7 +69,7 @@ export const loginUser = ({email,password})=>{
 }
 
 const loginSuccess = (dispatch, token) =>{
-	AsyncStorage.setItem('token',token)
+	//AsyncStorage.setItem('token',token)
 	dispatch({type: LOGIN_USER_SUCCESS,	payload: {token}})
 	Actions.TabBar({type: 'reset'})
 
@@ -77,7 +77,7 @@ const loginSuccess = (dispatch, token) =>{
 const registerUser = (dispatch,email,password)=>{
 
 		axios.post(Secrets.SERVER_URL +'/api/auth/register', {
-		   		username: email, password: password
+		   		email: email, password: password
 		})
 		.then((response)=> {	
 				  
@@ -96,25 +96,29 @@ const registerUser = (dispatch,email,password)=>{
 export const loginWithProvider = (provider) => async dispatch =>{
 		
 		SocialLoginAPI(provider)
-		.then(info=>{console.log(info)})
+		.then(info=>{console.log(info);registerUserWithProvider(dispatch,provider,info)})
 		.catch(error=>{console.log(error)})
 }
 
-const registerUserWithProvider = (dispatch,token,username)=>{
+const registerUserWithProvider = (dispatch,provider,info)=>{
 
-		dispatch({type: LOGIN_USER})
-		
+		dispatch({type: LOGIN_USER})		
 		axios.post(Secrets.SERVER_URL +'/api/auth/registerWithProvider', {
-		   		token, username
+		   		provider: provider,
+		   		access_token: provider==='twitter'? info.credentials.oauth_token : info.credentials.access_token,
+		   		id: 		  provider==='twitter'? info.user.id_str : info.user.id,
+		   		email:info.user.email,
+		   		name: info.user.name
 		})
 		.then((response)=> {	
 				  
 			   let active_token = response.data.token
+			   console.log(active_token);
 			   loginSuccess(dispatch,active_token)
 		})
 		.catch((error)=> {
 		  		// Register Fail 		  		
-		  		dispatch({type: LOGIN_USER_FAIL, payload: {error: 'Error to Login/Register'}})
+		  		//dispatch({type: LOGIN_USER_FAIL, payload: {error: 'Error to Login/Register'}})
 		    	console.log(error);
 		  	});		
 }
